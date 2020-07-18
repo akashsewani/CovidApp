@@ -7,25 +7,27 @@ from bson.json_util import dumps
 app = Flask(__name__)
 api = Api(app)
 conn = MongoClient()
-db = conn.Bookstore
+db = conn.covidapp
 #or db = pymongo.MongoClient.Bookstore
-db.Books.insert_one({"Name":"Book2"})
-db.Books.insert_one({"Name":"Book3"})
+@app.route('/api/v1/resources/dailycases/all', methods = ['GET'])
+@app.route('/', methods=['GET'])
 
-cursor = db.Books.find({})
-list_cursor = list(cursor)
-json_data = dumps(list_cursor, indent=2)
-print(json_data)
+def DateWiseData_all():
+    cursor = db.DailyCaseInfo.find({})
+    list_cursor = list(cursor)
+    json_data = dumps(list_cursor, indent=2)
+    return json_data
 
 
-class DefaultApi(Resource):
-    def get(self):
-        return "Default Api Get Called"
-    def post(self):
-        data = request.get_json()
-        return jsonify({'data': data})
 
-api.add_resource(DefaultApi, '/')
+
+@app.route('/state')
+def StateWiseData_all():
+    cursor = db.StatewiseCaseInfo.find({})
+    list_cursor = list(cursor)
+    json_data =dumps(list_cursor, indent=2)
+    return json_data
+
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0') 
+    app.run(debug=True) 

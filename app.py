@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_restful import Resource, Api
 from pymongo import MongoClient
 from bson.json_util import dumps
@@ -15,7 +15,7 @@ def DateWiseData_all():
     cursor = db.DailyCaseInfo.find({})
     list_cursor = list(cursor)
     json_data = dumps(list_cursor, indent=2)
-    return json_data
+    return render_template('base.html', contextlist=json_data)
 
 
 
